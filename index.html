@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="css/evo-calendar.css"/>
+    <link rel="stylesheet" type="text/css" href="css/evo-calendar.midnight-blue.css"/>
+
+    <title>Events Calendar</title>
+</head>
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/events.js"></script>
+    <script>
+        const myEvents = events["content"]
+        const calendarEvents = []
+        for (let i=0; i < myEvents.length; i++) {
+
+            let eventType = ''
+            myEvents[i]["type"] ? eventType = myEvents[i]["type"].join(", ") : eventType = 'None'
+
+            let startDate = myEvents[i]["startDate"].split("T");
+            startTime = startDate[1].slice(0,8);
+            startDate = startDate[0]
+
+            let endDate = myEvents[i]["endDate"].split("T");
+            endTime = endDate[1].slice(0,8);
+            endDate = endDate[0]
+
+            let venueName = ''
+            myEvents[i]["venue"] ? venueName = myEvents[i]["venue"]["name"] : venueName = ''
+            
+            let displayAddress = ''
+            myEvents[i]["venue"] ? displayAddress = myEvents[i]["venue"]["displayAddress"] : displayAddress = ''
+
+            let description = 
+                `<div>
+                    <img src=${myEvents[i]["coverPhotoUrl"]} width="100%">
+                    <ul>
+                    <li>Start Time: ${startTime}
+                    <li>End Time: ${endTime}
+                    <li><a href=${myEvents[i]["websiteUrl"]}>Event Website</a>
+                    <li>Venue: ${venueName}
+                    <li>Address: ${displayAddress}
+                </div>`
+
+            const eventObject = {
+                id: myEvents[i]["id"],
+                name: myEvents[i]["name"],
+                date: [startDate, endDate],
+                type: eventType,
+                description: description
+            }
+            calendarEvents.push(eventObject)
+        }
+    </script>
+
+    <script src="js/evo-calendar.js"></script>
+
+    <div id="calendar"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#calendar').evoCalendar({
+                calendarEvents: calendarEvents,                
+            })
+        })
+    </script>
+    
+</body>
+</html>
